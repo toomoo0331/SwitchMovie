@@ -1,0 +1,3 @@
+#cmakedefine DRAW_MATCH
+#cmakedefine MINIMIZE_STDOUT
+#cmakedefine DRAW_BND

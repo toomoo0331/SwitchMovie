@@ -1,0 +1,13 @@
+set(OpenCV_DIR "~/Library/opencv-2.4/release/installed/share/OpenCV")
+
+find_package(OpenCV REQUIRED)
+if (OpenCV_FOUND)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+    #    link_directories (${OpenCV_LIBS})
+    message(STATUS "OpenCV version: ${OpenCV_VERSION}")
+    message(STATUS "OpenCV libraries : ${OpenCV_LIBS}")
+    message(STATUS "OpenCV directory : ${OpenCV_INCLUDE_DIRS}")
+    link_libraries(${OpenCV_LIBS})
+else()
+    message(WARNING "Could not find OpenCV.")
+endif()

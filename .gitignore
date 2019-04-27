@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+
+data
+cmake-build-debug
+cmake-build-release
+build
+
+input
+output
