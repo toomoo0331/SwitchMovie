@@ -47,7 +47,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    cv::VideoCapture pcaps("/home/kei666/CLionProjects/SwitchMovie/data/20190423.mp4");
+    cv::VideoCapture pcaps("/home/kei666/CLionProjects/SwitchMovie/data/20190505b.mp4");
     std::vector<std::unique_ptr<cv::VideoWriter>> pwriter;
     cv::Mat tomo;
     pcaps>>tomo;

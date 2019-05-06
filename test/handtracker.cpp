@@ -18,11 +18,11 @@ int main(int argc, char* const argv[])
             ("help,h", "HELP")
             ("train,t", po::value<int>(), "train")
             ("root,r", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/"), "root path")
-            ("basename,b", po::value<std::string>()->default_value("Mouth"), "base name")
+            ("basename,b", po::value<std::string>()->default_value("InternalBody"), "base name")
             ("image_width,w", po::value<int>()->default_value(300), "for resizing the input (small is faster)")
             ("num_models_to_average,a", po::value<int>()->default_value(20), "number of models used to compute a single pixel response. must be less than the number of training models. only used at test time")
             ("step_size,s", po::value<int>()->default_value(3), "runs detector on every 'step_size' pixels. bigger means faster but you lose resolution. you need post-processing to get contours. only used at test time.")
-            ("input_video,v", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/input/20190423/0.mp4"), "input video path");
+            ("input_video,v", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/input/20190505/0.mp4"), "input video path");
 
     po::variables_map vm;
 
@@ -71,7 +71,7 @@ int main(int argc, char* const argv[])
             num_models_to_average = vm["num_models_to_average"].as<int>();
             target_width = vm["image_width"].as<int>();
             step_size = vm["step_size"].as<int>();
-            day="0423";
+            day="0505";
         } else {
             std::cout << opt << std::endl;
             return EXIT_FAILURE;
