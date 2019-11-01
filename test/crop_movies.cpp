@@ -83,7 +83,28 @@ int main(int argc, char **argv)
                     *pwriter[i] << f0;
                     //cv::imshow(std::to_string(i), f0);
                 }
-            }
+//        if (1800<k&&k<3600)
+//        {
+//            if (k%5==0) {
+//                if (frame.cols == w && frame.rows == h) {
+//                    for (int i = 0; i < video_num; i++) {
+//                        cv::Mat f0(frame, cv::Rect(a[i], b[i], 525, 525));
+//                        *pwriter[i] << f0;
+//                        //cv::imshow(std::to_string(i), f0);
+//                    }
+//                }
+//            }
+//        }
+
+//        if(1500<k&&k<16500) {
+//            if (frame.cols == w && frame.rows == h) {
+//                for (int i = 0; i < video_num; i++) {
+//                    cv::Mat f0(frame, cv::Rect(a[i], b[i], 525, 525));
+//                    *pwriter[i] << f0;
+//                    //cv::imshow(std::to_string(i), f0);
+//                }
+//            }
+//        }
         }
         k++;
         int key = cv::waitKey(1);

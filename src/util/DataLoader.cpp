@@ -22,7 +22,7 @@ DataLoader::DataLoader(std::string &ini_file_name)
     } else {
         std::cerr << "target is nothing." << std::endl;
         exit(1);
-    }
+    };
 
     if (boost::optional<std::string> tmp_str = pt_.get_optional<std::string>("root")) {
         root_ = tmp_str.get();
@@ -80,6 +80,7 @@ DataLoader::DataLoader(std::string &ini_file_name)
             std::cout << m << " ";
             models_directories_.push_back(root_ + "models/" + m + "/");
             globfeat_directories_.push_back(root_ + "globfeat/" + m + "/");
+            basename_.push_back(m);
         }
         std::cout << std::endl;
     } else {

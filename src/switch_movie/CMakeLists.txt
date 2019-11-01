@@ -1,12 +1,14 @@
 include_directories(../3party)
 
 SET(SW_SRC
+        Brightness.cpp
         HeadDetectors.cpp
         SwitchMovie.cpp
         )
 
 # define the header files (make the headers appear in IDEs.)
 SET(SW_HDRS
+        Brightness.h
         HeadDetectors.h
         SwitchMovie.h
         Graph.h

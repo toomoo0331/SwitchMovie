@@ -35,3 +35,27 @@ install(TARGETS switch_movie_csv DESTINATION bin)
 
 add_executable(crop_movies crop_movies.cpp)
 install(TARGETS crop_movies DESTINATION bin)
+
+add_executable(timelapse timelapse.cpp)
+install(TARGETS timelapse DESTINATION bin)
+
+add_executable(merge_movie merge_movie.cpp)
+install(TARGETS merge_movie DESTINATION bin)
+
+add_executable(gray gray.cpp)
+install(TARGETS gray DESTINATION bin)
+
+
+add_executable(rotate rotate_movie.cpp)
+install(TARGETS rotate DESTINATION bin)
+
+add_executable(hand_score hand_score.cpp)
+target_link_libraries(hand_score hd)
+install(TARGETS hand_score DESTINATION bin)
+
+add_executable(test_model test_model.cpp)
+target_link_libraries(test_model hd util)
+install(TARGETS test_model DESTINATION bin)
+
+add_executable(test_brightness test_brightness.cpp)
+install(TARGETS test_brightness DESTINATION bin)

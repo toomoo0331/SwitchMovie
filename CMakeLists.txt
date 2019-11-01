@@ -32,6 +32,7 @@ set(PACKAGE_NAME "medical_dr")
 set(PACKAGE_VERSION "1.0")
 
 file(COPY config.ini DESTINATION ${CMAKE_BINARY_DIR}/bin/)
+file(COPY config_test.ini DESTINATION ${CMAKE_BINARY_DIR}/bin/)
 
 add_subdirectory(src)
 add_subdirectory(test)

@@ -466,7 +466,4 @@ void HandDetector::computeColorHist_HSV(Mat &src, Mat &hist)
     s = 1./s * 255.;
     itt.planes[0] *= s;
     itt.planes[0].copyTo(hist);
-	
-	
 }
-

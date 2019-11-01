@@ -38,6 +38,7 @@ public:
     int num_models_to_average_;
     int target_width_;
     bool positive_region_;
+    std::vector<std::string>  basename_;
 
     //switch movie
     std::vector<float> alphas_;

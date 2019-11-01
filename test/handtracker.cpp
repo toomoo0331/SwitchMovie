@@ -22,7 +22,9 @@ int main(int argc, char* const argv[])
             ("image_width,w", po::value<int>()->default_value(300), "for resizing the input (small is faster)")
             ("num_models_to_average,a", po::value<int>()->default_value(20), "number of models used to compute a single pixel response. must be less than the number of training models. only used at test time")
             ("step_size,s", po::value<int>()->default_value(3), "runs detector on every 'step_size' pixels. bigger means faster but you lose resolution. you need post-processing to get contours. only used at test time.")
-            ("input_video,v", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/input/20190505/0.mp4"), "input video path");
+            ("input_video,v", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/input/20190505/0.mp4"), "input video path")
+            ("num,n", po::value<int>()->default_value(1), "model num");
+            ("basename2,b2", po::value<std::string>()->default_value("InternalBody"), "base name2");
 
     po::variables_map vm;
 
@@ -111,13 +113,9 @@ int main(int argc, char* const argv[])
             //cap >> im; if(!im.data) break;
 
             hd.test(im,num_models_to_average,step_size);
-
-
             // Different ways to visualize the results
             // hd._response_img (float probabilities in a matrix)
             // hd._blur (blurred version of _response_img)
-
-
             int SHOW_RAW_PROBABILITY = 1;
             if(SHOW_RAW_PROBABILITY)
             {
@@ -147,9 +145,9 @@ int main(int argc, char* const argv[])
                     ss.str("");
                     ss << root + "/output/vis/" +day+"_"+ basename + "0.mov";
                     int fourcc = CV_FOURCC('m','p','4','v');
-                    avi2.open(ss.str(),fourcc,cap.get(CV_CAP_PROP_FPS),pp_contour.size(),true);
+                    //avi2.open(ss.str(),fourcc,cap.get(CV_CAP_PROP_FPS),pp_contour.size(),true);
                 }
-                avi2 << pp_contour;
+                //avi2 << pp_contour;
             }
 
             int SHOW_RES_ALPHA_BLEND = 1;
@@ -170,9 +168,9 @@ int main(int argc, char* const argv[])
              ss << root + "/output/vis/"+day+"_" + basename + ".mov";
 //                 ss << root + "/output/vis/" + "20190213_4" + ".mov";
              int fourcc = CV_FOURCC('m','p','4','v');
-             avi.open(ss.str(),fourcc,cap.get(CV_CAP_PROP_FPS),ppr.size(),true);
+             //avi.open(ss.str(),fourcc,cap.get(CV_CAP_PROP_FPS),ppr.size(),true);
              }
-             avi << ppr;
+             //avi << ppr;
 
 
             int k = cv::waitKey(1);

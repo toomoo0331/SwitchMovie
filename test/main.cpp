@@ -8,6 +8,7 @@
 #include <boost/program_options.hpp>
 #include <opencv2/opencv.hpp>
 #include <tbb/parallel_for.h>
+#include <switch_movie/Brightness.h>
 
 #include "util/DataLoader.h"
 #include "util/visualizer.h"
@@ -110,14 +111,17 @@ int main(int argc, char* const argv[])
     //すべての画像を表示し，スコアが最もいいもの以外を赤色にして動画に保存するためのVideoWriter
     cv::VideoWriter toprank_red_mov;
 
-    //フレームのスコアを計算するためのHeadDetectorのインスタンスを生成する．
-    sw::HeadDetectors hd(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
+//    //フレームのスコアを計算するためのHeadDetectorのインスタンスを生成する．
+//    sw::HeadDetectors hd(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
+//                         dl.num_models_to_average_, dl.step_size_, dl.target_width_);
+
+
+    sw::Brightness bn(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
                          dl.num_models_to_average_, dl.step_size_, dl.target_width_);
 
     int video_len = caps[0].get(CV_CAP_PROP_FRAME_COUNT);
     //全フレームのランクを格納しておくためのvector
     std::vector<std::vector<int>> rank_vecs;
-
     std::cout << "0%        50%        100%" << std::endl;
     std::cout << "+-----------+-----------+" << std::endl;
     int percent = 0;
@@ -130,7 +134,7 @@ int main(int argc, char* const argv[])
         for (int j = 0; j < i * 100 / video_len / 4; j++) {
             progress += "#";
         }
-        std::cout << std::setfill(' ') << std::setw(25) << std::left << progress
+        std::cout <<std::setfill(' ') << std::setw(25) << std::left << progress
                   << std::setfill(' ') << std::setw(5) << std::right << percent << "%";
         std::cout << "\r";
         std::vector<cv::Mat> images(dl.movie_num_);
@@ -142,7 +146,8 @@ int main(int argc, char* const argv[])
         }
         std::vector<int> ranks;
         std::vector<float> weights;
-        hd.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
+//        hd.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
+        bn.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
         rank_vecs.push_back(ranks);//現在のフレームのランクを格納する
         for (int j = 0; j < paramater_size; j++) {
             //グラフを作成する（ノードをつなげる）
