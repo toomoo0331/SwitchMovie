@@ -18,11 +18,11 @@ int main(int argc, char* const argv[])
             ("help,h", "HELP")
             ("train,t", po::value<int>(), "train")
             ("root,r", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/"), "root path")
-            ("basename,b", po::value<std::string>()->default_value("InternalBody"), "base name")
+            ("basename,b", po::value<std::string>()->default_value("Mouth"), "base name")
             ("image_width,w", po::value<int>()->default_value(300), "for resizing the input (small is faster)")
             ("num_models_to_average,a", po::value<int>()->default_value(20), "number of models used to compute a single pixel response. must be less than the number of training models. only used at test time")
             ("step_size,s", po::value<int>()->default_value(3), "runs detector on every 'step_size' pixels. bigger means faster but you lose resolution. you need post-processing to get contours. only used at test time.")
-            ("input_video,v", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/input/20190505/0.mp4"), "input video path")
+            ("input_video,v", po::value<std::string>()->default_value("/home/kei666/CLionProjects/SwitchMovie/input/miccai/test0/0.mp4"), "input video path")
             ("num,n", po::value<int>()->default_value(1), "model num");
             ("basename2,b2", po::value<std::string>()->default_value("InternalBody"), "base name2");
 
@@ -73,7 +73,7 @@ int main(int argc, char* const argv[])
             num_models_to_average = vm["num_models_to_average"].as<int>();
             target_width = vm["image_width"].as<int>();
             step_size = vm["step_size"].as<int>();
-            day="0505";
+            day="0225";
         } else {
             std::cout << opt << std::endl;
             return EXIT_FAILURE;
@@ -165,12 +165,12 @@ int main(int argc, char* const argv[])
              {
              std::stringstream ss;
              ss.str("");
-             ss << root + "/output/vis/"+day+"_" + basename + ".mov";
+             ss << root + "/output/vis/"+day+"/" + basename + ".mov";
 //                 ss << root + "/output/vis/" + "20190213_4" + ".mov";
              int fourcc = CV_FOURCC('m','p','4','v');
-             //avi.open(ss.str(),fourcc,cap.get(CV_CAP_PROP_FPS),ppr.size(),true);
+             avi.open(ss.str(),fourcc,cap.get(CV_CAP_PROP_FPS),ppr.size(),true);
              }
-             //avi << ppr;
+             avi << ppr;
 
 
             int k = cv::waitKey(1);
@@ -179,7 +179,7 @@ int main(int argc, char* const argv[])
             }
             if (k == 's') {
                 int current_frame = (int)cap.get(CV_CAP_PROP_POS_FRAMES);
-                cap.set(CV_CAP_PROP_POS_FRAMES, current_frame + fps * 60 * 5);
+                cap.set(CV_CAP_PROP_POS_FRAMES, current_frame + fps * 60);
             }
         }
     }

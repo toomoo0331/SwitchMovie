@@ -111,13 +111,13 @@ int main(int argc, char* const argv[])
     //すべての画像を表示し，スコアが最もいいもの以外を赤色にして動画に保存するためのVideoWriter
     cv::VideoWriter toprank_red_mov;
 
-//    //フレームのスコアを計算するためのHeadDetectorのインスタンスを生成する．
-//    sw::HeadDetectors hd(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
-//                         dl.num_models_to_average_, dl.step_size_, dl.target_width_);
-
-
-    sw::Brightness bn(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
+    //フレームのスコアを計算するためのHeadDetectorのインスタンスを生成する．
+    sw::HeadDetectors hd(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
                          dl.num_models_to_average_, dl.step_size_, dl.target_width_);
+
+
+//    sw::Brightness bn(dl.models_directories_, dl.globfeat_directories_, dl.movie_num_, dl.positive_region_,
+//                         dl.num_models_to_average_, dl.step_size_, dl.target_width_);
 
     int video_len = caps[0].get(CV_CAP_PROP_FRAME_COUNT);
     //全フレームのランクを格納しておくためのvector
@@ -146,8 +146,8 @@ int main(int argc, char* const argv[])
         }
         std::vector<int> ranks;
         std::vector<float> weights;
-//        hd.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
-        bn.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
+        hd.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
+//        bn.calculateWeights(images, &weights, &ranks);//それぞれの重みを計算し，ランク付けも行う
         rank_vecs.push_back(ranks);//現在のフレームのランクを格納する
         for (int j = 0; j < paramater_size; j++) {
             //グラフを作成する（ノードをつなげる）
@@ -225,7 +225,7 @@ int main(int argc, char* const argv[])
         {
             std::stringstream ss;
             ss.str("");
-            ss << dl.output_directory_ + "top_ranking" + "_mouth.mov";
+            ss << dl.output_directory_ + "top_ranking" + "_"+dl.basename_[0]+".mov";
             int fourcc = CV_FOURCC('m', 'p', '4', 'v');
             toprank_mov.open(ss.str(),fourcc, caps[0].get(CV_CAP_PROP_FPS),images[0].size(),true);
         }
@@ -237,7 +237,7 @@ int main(int argc, char* const argv[])
         {
             std::stringstream ss;
             ss.str("");
-            ss << dl.output_directory_ + "top_ranking_red" + "_mouth.mov";
+            ss << dl.output_directory_ + "top_ranking_red" + "_"+dl.basename_[0]+".mov";
             int fourcc = CV_FOURCC('m', 'p', '4', 'v');
             toprank_red_mov.open(ss.str(),fourcc, caps[0].get(CV_CAP_PROP_FPS),all_top.size(),true);
         }
@@ -280,7 +280,7 @@ int main(int argc, char* const argv[])
                         if (!optimize_mov[s].isOpened()) {
                             std::stringstream ss;
                             ss.str("");
-                            ss << dl.output_directory_ + "mintime_optimize" + std::to_string(dl.mintimes_[s]) + "_mouth.mov";
+                            ss << dl.output_directory_ + "mintime_optimize" + std::to_string(dl.mintimes_[s]) + "_"+dl.basename_[0]+".mov";
                             int fourcc = CV_FOURCC('m', 'p', '4', 'v');
                             optimize_mov[s].open(ss.str(), fourcc, caps[0].get(CV_CAP_PROP_FPS),
                                                  images[movie_nums[s][i]].size(), true);
@@ -291,7 +291,7 @@ int main(int argc, char* const argv[])
                         if (!optimize_red_mov[s].isOpened()) {
                             std::stringstream ss;
                             ss.str("");
-                            ss << dl.output_directory_ + "mintime_optimize" + std::to_string(dl.mintimes_[s]) + "_red_mouth.mov";
+                            ss << dl.output_directory_ + "mintime_optimize" + std::to_string(dl.mintimes_[s]) + "_red_"+dl.basename_[0]+".mov";
                             int fourcc = CV_FOURCC('m', 'p', '4', 'v');
                             optimize_red_mov[s].open(ss.str(), fourcc, caps[0].get(CV_CAP_PROP_FPS), all.size(), true);
                         }

@@ -254,6 +254,119 @@ void mergeMovie2(int video_num, std::string video_extension, int day, int framer
     }
 }
 
+void mergeMovie3(int video_num, std::string video_extension, int day, int framerate, int graph_h, int day1){
+    std::vector<cv::VideoCapture> caps;
+    std::vector<std::string> movie_pathes;
+    std::string csv_name;
+    for (int i = 0; i < video_num; i++) {
+        movie_pathes.push_back("/home/kei666/CLionProjects/SwitchMovie/input/" + std::to_string(day) + "/" + std::to_string(i) + ".mp4");
+    }
+    for (const auto &str : movie_pathes) {
+        caps.push_back(cv::VideoCapture(str));
+        std::cout << str << std::endl;
+    }
+    std::string save_name =  "/home/kei666/CLionProjects/SwitchMovie/output/"+std::to_string(day)+"/score." + video_extension;
+    int video_len = caps[0].get(CV_CAP_PROP_FRAME_COUNT);
+    int w = caps[0].get(CV_CAP_PROP_FRAME_WIDTH);
+    int h = caps[0].get(CV_CAP_PROP_FRAME_HEIGHT);
+    int a[6]={0,w,2*w,0,w,2*w};
+    int b[6]={0,0,0,h,h,h};
+    cv::VideoWriter pwriter(save_name, cv::VideoWriter::fourcc('M', 'P', '4', 'V'),framerate,cv::Size(3*w, 2*h+2*graph_h),true);
+    cv::Mat image = cv::Mat::zeros(2*h+2*graph_h,3*w,CV_8UC3);
+    graph score_graph1(day, video_num, framerate, video_len,graph_h);
+    graph score_graph2(day1, video_num, framerate, video_len,graph_h);
+
+
+    for(int k=0;k<video_len;k++){
+        std::vector<cv::Mat> frame;
+        cv::Mat tmp_frame;
+        for(int i=0; i < video_num; i++) {
+            caps[i] >> tmp_frame;
+            cv::Mat roi0 = image(cv::Rect(a[i], b[i], w, h));
+            tmp_frame.copyTo(roi0);
+            cv::putText(image, std::to_string(i), cv::Point(a[i] + 30, b[i] + 30), cv::FONT_HERSHEY_SIMPLEX, 1,
+                        score_graph1.getColor(i), 2, CV_AA);
+        }
+        cv::rectangle(image, cv::Point(a[score_graph1.getRank(k)]+2,b[score_graph1.getRank(k)]+2), cv::Point(a[score_graph1.getRank(k)]+w-2, b[score_graph1.getRank(k)]+h-2), cv::Scalar(255,255,255), 2);
+        cv::rectangle(image, cv::Point(a[score_graph2.getRank(k)]+2,b[score_graph2.getRank(k)]+2), cv::Point(a[score_graph2.getRank(k)]+w-2, b[score_graph2.getRank(k)]+h-2), cv::Scalar(0,0,255), 2);
+
+        std::cout << std::setfill(' ') << std::setw(5) << std::left << int(k/1800)
+                  << std::setfill(' ') << std::setw(5) << std::right << int(k/30)-int(k/1800)*60<< " time";
+        std::cout << "\r";
+
+        cv::Mat roi1 = image(cv::Rect(0,2*h,3*w,graph_h));
+        cv::Mat roi2 = image(cv::Rect(0,2*h+graph_h,3*w,graph_h));
+        score_graph1.getGraph(k,w).copyTo(roi1);
+        score_graph2.getGraph(k,w).copyTo(roi2);
+        cv::putText(image, "brightness", cv::Point(30, 2*h+(graph_h/2)), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255,255,255), 2, CV_AA);
+        cv::putText(image, "area", cv::Point(30, 2*h+((3*graph_h)/2)), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(0,0,255), 2, CV_AA);
+        imshow("all", image);
+        pwriter << image;
+        int key = cv::waitKey(1);
+        if(key == 'q') {
+            break;
+        }
+    }
+}
+
+void mergeMovie4(int video_num){
+    std::vector<cv::VideoCapture> caps;
+    std::vector<std::string> movie_pathes;
+    std::string csv_name;
+    for (int i = 0; i < video_num; i++) {
+        movie_pathes.push_back("/home/kei666/CLionProjects/SwitchMovie/input/miccai/test5/" + std::to_string(i) + ".mp4");
+    }
+    for (const auto &str : movie_pathes) {
+        caps.push_back(cv::VideoCapture(str));
+        std::cout << str << std::endl;
+    }
+
+    int video_len = caps[0].get(CV_CAP_PROP_FRAME_COUNT);
+    int w = 640;
+    int h = 540;
+    int fps=caps[0].get(CV_CAP_PROP_FPS);
+    int a[6]={0,w,2*w,0,w,2*w};
+    int b[6]={0,0,0,h,h,h};
+/*
+    std::vector<std::unique_ptr<cv::VideoWriter>> pwriters;
+    for (int i = 0; i < video_num; i++) {
+        std::string save_name =  "/home/kei666/CLionProjects/SwitchMovie/input/miccai/sample1/"+std::to_string(i)+".mp4";
+
+        pwriters.push_back(std::unique_ptr<cv::VideoWriter>(new cv::VideoWriter(save_name,
+                                                                               cv::VideoWriter::fourcc('M', 'P', '4', 'V'),
+                                                                               fps,
+                                                                               cv::Size(w, h),
+                                                                               true)));
+    }
+*/
+    std::string save_name =  "/home/kei666/CLionProjects/SwitchMovie/input/miccai/sample1/all.mp4";
+    cv::VideoWriter pwriter(save_name, cv::VideoWriter::fourcc('M', 'P', '4', 'V'),fps,cv::Size(3*w, 2*h),true);
+    cv::Mat image = cv::Mat::zeros(2*h,3*w,CV_8UC3);
+
+    video_len=caps[0].get(CV_CAP_PROP_FRAME_COUNT);
+
+    for(int k=0;k<video_len;k++){
+        std::vector<cv::Mat> frame;
+        cv::Mat tmp_frame;
+        for(int i=0; i < video_num; i++) {
+            caps[i] >> tmp_frame;
+            cv::resize(tmp_frame, tmp_frame, cv::Size(w,h));
+            cv::Mat roi0 = image(cv::Rect(a[i], b[i], w, h));
+            tmp_frame.copyTo(roi0);
+            //*pwriters[i] << tmp_frame;
+        }
+        std::cout << std::setfill(' ') << std::setw(5) << std::left << int(k/1800)
+                  << std::setfill(' ') << std::setw(5) << std::right << int(k/30)-int(k/1800)*60<< " time";
+        std::cout << "\r";
+
+        //imshow("all", image);
+        pwriter << image;
+        int key = cv::waitKey(1);
+        if(key == 'q') {
+            break;
+        }
+    }
+}
 int main(int argc, char **argv)
 {
     namespace po = boost::program_options;
@@ -297,7 +410,9 @@ int main(int argc, char **argv)
     }
 
     //mergeMovie1(video_num, video_extension);
-    mergeMovie2(5, video_extension,20190825, 30,300);
+    //mergeMovie2(5, video_extension,20190727, 30,300);
+    //mergeMovie3(5, video_extension,20191104, 30,300,201911041);
+    mergeMovie4(5);
 
     return true;
 }

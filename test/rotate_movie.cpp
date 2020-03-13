@@ -49,16 +49,17 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    cv::VideoCapture pcaps0("/home/kei666/CLionProjects/SwitchMovie/input/20190911/0.mp4");
-    cv::VideoCapture pcaps1("/home/kei666/CLionProjects/SwitchMovie/input/20190911/1.mp4");
-    cv::VideoCapture pcaps2("/home/kei666/CLionProjects/SwitchMovie/input/20190911/2.mp4");
-    cv::VideoCapture pcaps3("/home/kei666/CLionProjects/SwitchMovie/input/20190911/3.mp4");
-    cv::VideoCapture pcaps4("/home/kei666/CLionProjects/SwitchMovie/input/20190911/4.mp4");
+    cv::VideoCapture pcaps0("/home/kei666/CLionProjects/SwitchMovie/data/miccai_data/test1.mp4");
     std::vector<std::unique_ptr<cv::VideoWriter>> pwriter;
-    int video_len = pcaps0.get(CV_CAP_PROP_FRAME_COUNT);
     int w = pcaps0.get(CV_CAP_PROP_FRAME_WIDTH);
     int h = pcaps0.get(CV_CAP_PROP_FRAME_HEIGHT);
-    std::cout<<"asdafaf"<<std::endl;
+    int fps = pcaps0.get(CV_CAP_PROP_FPS);
+    int video_w=w/3;
+    int video_h=h/2;
+    int video_len = fps*60*30;
+    int a[5]={0,video_w, 2*video_w,0,video_w};
+    int b[5]={0,0,0,video_h,video_h};
+
     for (int i = 0; i < video_num; i++) {
         std::string save_name =  video_name+"rotate_"+std::to_string(i)+"." + video_extension;
 
@@ -80,10 +81,9 @@ int main(int argc, char **argv)
     double rows[5]={-20,35,28,7,-60};
 
     cv::Point2f center = cv::Point2f(
-            static_cast<float>(w / 2),
-            static_cast<float>(h / 2));
+            static_cast<float>(video_w / 2),
+            static_cast<float>(video_h / 2));
 
-    cv::Mat frame0,frame1,frame2,frame3,frame4;
     std::vector<cv::Mat> frame;
 
     std::cout << std::endl << "save movie" << std::endl;
@@ -99,16 +99,16 @@ int main(int argc, char **argv)
         std::cout << std::setfill(' ') << std::setw(25) << std::left << progress
                   << std::setfill(' ') << std::setw(5) << std::right << percent << "%";
         std::cout << "\r";
-        pcaps0 >> frame0;
-        frame.push_back(frame0);
-        pcaps1 >> frame1;
-        frame.push_back(frame1);
-        pcaps2 >> frame2;
-        frame.push_back(frame2);
-        pcaps3 >> frame3;
-        frame.push_back(frame3);
-        pcaps4 >> frame4;
-        frame.push_back(frame4);
+
+        cv::Mat all_frame;
+        pcaps0>>all_frame;
+
+        for(int tmp_i=0; tmp_i<5;tmp_i++){
+            cv::Mat f1(all_frame, cv::Rect(a[tmp_i],b[tmp_i], video_w, video_h));
+            cv::imshow(std::to_string(tmp_i), f1);
+            frame.push_back(f1);
+        }
+
 
 //        std::cout << std::setfill(' ') << std::setw(5) << std::left << int(k/1800)
 //                  << std::setfill(' ') << std::setw(5) << std::right << int(k/30)-int(k/1800)*60<< " time";
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
             cv::warpAffine(frame[i], dest, affine, frame[i].size(), cv::INTER_CUBIC);
             cv::warpAffine(dest, dest, m2, frame[i].size(), cv::INTER_CUBIC);
             *pwriter[i] << dest;
-            //cv::imshow(name, dest);
+            cv::imshow(name, dest);
         }
 
 
