@@ -11,3 +11,12 @@
 root = ABSOLUTE PATH TO PROJECT FOLDER
 ```
 
+
+## ダイクストラ法のやつ
+- In test/switch_movie_csv.cpp, head.csvのとこのパスとrootのとこのパスとdirectoryが指す動画が入ってるディレクトリのパスを変える！！
+```switch_movie_csv.cpp
+root = ABSOLUTE PATH TO PROJECT FOLDER
+directory = 動画が５つ入ってるディレクトリ
+ifs = ５つのスコアが総フレーム分入ってるcsvファイル
+str = 動画までのパス
+```
